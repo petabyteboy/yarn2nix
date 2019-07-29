@@ -222,6 +222,7 @@ in rec {
 
   mkYarnPackage = {
     name ? null,
+    version ? null,
     src,
     packageJSON ? src + "/package.json",
     yarnLock ? src + "/yarn.lock",
@@ -238,7 +239,7 @@ in rec {
       package = lib.importJSON packageJSON;
       pname = package.name;
       safeName = reformatPackageName pname;
-      version = package.version;
+      version = if (attrs ? version) then attrs.version else package.version;
       baseName = unlessNull name "${safeName}-${version}";
 
       workspaceDependenciesTransitive = lib.unique (
